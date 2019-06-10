@@ -1,15 +1,41 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Two functions that will speed up calculations for large data sets using cache (based on lexical scoping)
+## 	makeCacheMatrix function will cache the inverse of a matrix
+## 	cacheSolve function will calculate the inverse of a matrix using the solve built-in function
+## Based on the example given in the assignment (makeVector function)
 
-## Write a short comment describing this function
+## Caching the Inverse of a Matrix, this function does the following:
+## sets the value of the matrix
+## gets the value of the matrix
+## sets the value of the inverse
+## gets the value of the inverse
 
 makeCacheMatrix <- function(x = matrix()) {
-
+        m <- NULL
+        set <- function(y) {
+                x <<- y
+                m <<- NULL
+        }
+        get <- function() x
+        setsolve <- function(solve) m <<- solve
+        getsolve <- function() m
+        list(set = set, get = get,
+             setsolve = setsolve,
+             getsolve = getsolve)
 }
 
 
-## Write a short comment describing this function
+## If there is no cached matrix (m) then 
+## this function calls the built-in function 
+## named 'solve' to calculate the inverse of the matrix (data)
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+                m <- x$getsolve()
+        if(!is.null(m)) {
+                message("getting cached data")
+                return(m)
+        }
+        data <- x$get()
+        m <- solve(data, ...)
+        x$setsolve(m)
+        m
 }
